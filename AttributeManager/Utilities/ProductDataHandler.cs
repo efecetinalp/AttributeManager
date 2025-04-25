@@ -10,8 +10,10 @@ using CATMat;
 using DRAFTINGITF;
 using ProductStructureTypeLib;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections;
 
-namespace AttributeManager
+namespace AttributeManager.Utilities
 {
     public class ProductDataHandler
     {
@@ -71,10 +73,14 @@ namespace AttributeManager
                     else
                         materialName = "---";
 
-                    GeneratedDatas.Add(product.Products.Item(i).get_PartNumber() + "|"
+                    string result = GeneratedDatas.FirstOrDefault(x => x.Split("|")[0] == product.Products.Item(i).get_PartNumber());
+                    if (result == null)
+                    {
+                        GeneratedDatas.Add(product.Products.Item(i).get_PartNumber() + "|"
                         + product.Products.Item(i).get_Name() + "|"
                         + product.Products.Item(i).get_DescriptionRef() + "|"
                         + materialName);
+                    }
 
                     GetSubProductData(product.Products.Item(i).ReferenceProduct);
                 }
@@ -92,5 +98,50 @@ namespace AttributeManager
             else
                 return material.get_Name();
         }
+
+        public List<string> GetProductList()
+        {
+            List<string> results = new();
+            foreach (var data in GeneratedDatas)
+            {
+                results.Add(data.Split("|")[0]);
+            }
+
+            return results;
+        }
+
+        public List<string> GetInstanceNameList()
+        {
+            List<string> results = new();
+            foreach (var data in GeneratedDatas)
+            {
+                results.Add(data.Split("|")[1]);
+            }
+
+            return results;
+        }
+
+        public List<string> GetDescriptionList()
+        {
+            List<string> results = new();
+            foreach (var data in GeneratedDatas)
+            {
+                results.Add(data.Split("|")[2]);
+            }
+
+            return results;
+        }
+
+        public List<string> GetMaterialList()
+        {
+            List<string> results = new();
+            foreach (var data in GeneratedDatas)
+            {
+                results.Add(data.Split("|")[3]);
+            }
+
+            return results;
+        }
+
     }
 }
