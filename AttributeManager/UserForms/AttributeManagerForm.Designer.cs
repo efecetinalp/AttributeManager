@@ -412,6 +412,7 @@
             Controls.Add(imgClose);
             FormBorderStyle = FormBorderStyle.None;
             Name = "AttributeManagerForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += AttributeManagerForm_Load;
             MouseDown += AttributeManagerForm_MouseDown;

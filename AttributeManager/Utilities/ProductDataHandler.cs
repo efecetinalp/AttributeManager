@@ -29,6 +29,47 @@ namespace AttributeManager.Utilities
             GenerateListData();
         }
 
+        public string GetCurrentMaterial(Part part)
+        {
+            Material material;
+            MaterialManager materialManager = (MaterialManager)part.GetItem("CATMatManagerVBExt");
+            materialManager.GetMaterialOnPart(part, out material);
+
+            if (material is null)
+            {
+                return "---";
+            }
+            else
+            {
+                return material.get_Name();
+            }
+        }
+
+        #region Search Sub Product
+
+        public void SearchSubProduct(Product currentProduct, string searchedProduct)
+        {
+            if (currentProduct.Products.Count > 0)
+            {
+                for (int i = 1; i <= currentProduct.Products.Count; i++)
+                {
+                    if (currentProduct.Products.Item(i).get_Name() == searchedProduct)
+                    {
+                        GetSearchedProduct = currentProduct.Products.Item(i).ReferenceProduct;
+                    }
+
+                    //search in sub product assembly
+                    SearchSubProduct(currentProduct.Products.Item(i).ReferenceProduct, searchedProduct);
+                }
+            }
+        }
+
+        public Product GetSearchedProduct { get; private set; }
+
+        #endregion
+
+        #region Generate Initial Product List
+
         private void GenerateListData()
         {
             GeneratedDatas = new();
@@ -66,8 +107,7 @@ namespace AttributeManager.Utilities
                     string materialName;
                     if (product.Products.Item(i).ReferenceProduct.Parent is PartDocument)
                     {
-                        PartDocument currentPartDocument = (PartDocument)product.Products.Item(i).ReferenceProduct.Parent;
-                        Part currentPart = currentPartDocument.Part;
+                        Part currentPart = ((PartDocument)product.Products.Item(i).ReferenceProduct.Parent).Part;
                         materialName = GetMaterialOnPart(currentPart);
                     }
                     else
@@ -98,6 +138,10 @@ namespace AttributeManager.Utilities
             else
                 return material.get_Name();
         }
+
+        #endregion
+
+        #region Get Generated List Methods
 
         public List<string> GetProductList()
         {
@@ -143,5 +187,6 @@ namespace AttributeManager.Utilities
             return results;
         }
 
+        #endregion
     }
 }

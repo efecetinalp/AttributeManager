@@ -173,6 +173,7 @@
             Controls.Add(imgClose);
             FormBorderStyle = FormBorderStyle.None;
             Name = "SettingsForm";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "SettingsForm";
             Load += SettingsForm_Load;
             MouseDown += SettingsForm_MouseDown;
